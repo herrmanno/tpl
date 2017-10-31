@@ -1,0 +1,20 @@
+{
+  "name": "tpl",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "preferGlobal": true,
+  "scripts": {},
+  "keywords": ["template", "tool", "utility"],
+  "author": "o.herrmann92@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^8.0.47"
+  },
+  "dependencies": {
+    "commander": "^2.11.0",
+    "inquirer": "^3.3.0",
+    "xdg-basedir": "^3.0.0"
+  }
+}
