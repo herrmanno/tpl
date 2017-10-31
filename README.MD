@@ -41,8 +41,8 @@ Create a new template file. Note that the template name "init*" is reserved and 
 You can create templates that will call other template at runime. An example would look like this:
 
 ```js
-const myOtherTemplate1 = require("./t1)
-const myOtherTemplate2 = require("./t2)
+const myOtherTemplate1 = require("./t1")
+const myOtherTemplate2 = require("./t2")
 
 module.export = {
   args: [

@@ -1,6 +1,6 @@
 {
   "name": "tpl-cmd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Quick and reusable template generation",
   "main": "src/index.js",
   "bin": {
