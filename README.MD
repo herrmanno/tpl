@@ -60,8 +60,18 @@ Remember, it's only JavaScript ;)
 
 ## Template file format
 
-TODO
+Any javascript file whose default export is an object that fulfills the following form is a valid template
 
-## API
-
-TODO
+```js
+{
+  args: Array<{
+    name: string,
+    message?: string,
+    default?: string
+  }>
+  files(args): Array<{
+    name: string,
+    content: string
+  }>
+}
+```
