@@ -11,6 +11,7 @@
   "keywords": ["template", "tool", "utility"],
   "author": "o.herrmann92@gmail.com",
   "license": "ISC",
+  "homepage": "https://github.com/herrmanno/tpl",
   "devDependencies": {
     "@types/node": "^8.0.47"
   },
