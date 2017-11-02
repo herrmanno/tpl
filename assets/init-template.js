@@ -70,6 +70,26 @@ module.exports = {
                          * - uncapitalize()
                          */
                         content: \`
+                            /**
+                             * This Class was generated from the template
+                             * 
+                             * \`\`\`
+                             * export default class ${name.pascalCase()} {
+                             *   ${name.camelCase()}() {
+                             *       // camel-cased method name
+                             *   }
+                             *   ${name.pascalCase()}() {
+                             *       // pascal-cased method name
+                             *   }
+                             *   ${name.snakeCase()}() {
+                             *       // snake-cased method name
+                             *   }
+                             *   ${name.constCase()}() {
+                             *       // const-cased method name
+                             *   }
+                             *}
+                             * \`\`\`
+                             */
                             export default class ${name.pascalCase()} {
                                 ${name.camelCase()}() {
                                     // camel-cased method name

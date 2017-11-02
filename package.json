@@ -8,16 +8,24 @@
   },
   "preferGlobal": true,
   "scripts": {},
-  "keywords": ["template", "tool", "utility"],
+  "keywords": [
+    "template",
+    "tool",
+    "utility"
+  ],
   "author": "o.herrmann92@gmail.com",
   "license": "ISC",
   "homepage": "https://github.com/herrmanno/tpl",
   "devDependencies": {
-    "@types/node": "^8.0.47"
+    "@types/inquirer": "0.0.35",
+    "@types/node": "^8.0.47",
+    "@types/xdg-basedir": "^2.0.0",
+    "@types/yargs": "^8.0.2"
   },
   "dependencies": {
     "commander": "^2.11.0",
     "inquirer": "^3.3.0",
-    "xdg-basedir": "^3.0.0"
+    "xdg-basedir": "^3.0.0",
+    "yargs": "^10.0.3"
   }
 }

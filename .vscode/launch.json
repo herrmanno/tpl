@@ -9,13 +9,17 @@
             "request": "launch",
             "console": "externalTerminal",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/src/index.js",
+            "program": "${workspaceFolder}/src/index.ts",
             "args": [
                 // "--init"
                 "-a",
                 "-f",
                 "ts/action",
-                "name=AddTodo"
+                "name=AddTodo",
+                "-foo bar"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/lib/index.js"
             ]
         }
     ]

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-const commander = require("commander")
-const execTemplate = require("./exec")
-const pkg = require("../package.json")
-const {configDir} = require("./config")
+import commander from "commander"
+import execTemplate from "./exec"
+import {configDir}from "./config"
+import "./string+cases"
 
-require("./string+cases")
+const pkg = require("../package.json")
 
 function main() {
     const prog = commander

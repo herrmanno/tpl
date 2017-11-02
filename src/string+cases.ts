@@ -1,3 +1,15 @@
+interface String {
+    camelCase(): string
+    pascalCase(): string
+    snakeCase(): string
+    constCase(): string
+
+    capitalize(): string
+    uncapitalize(): string
+
+    toList(seperator?: string): string[]
+}
+
 String.prototype.camelCase = function() {
     let str = this.uncapitalize()
     str = str.replace(/_(\w)/, m => m[1].toUpperCase())

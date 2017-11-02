@@ -1,25 +1,21 @@
-const fs = require("fs")
-const path = require("path")
-const inquirer = require("inquirer")
+import * as fs from "fs"
+import * as path from "path"
+import * as inquirer from "inquirer"
+import {configDir} from "./config"
+import Template from './Template'
 
-const {configDir} = require("./config")
+type Args = {
+    template: string | Template
+    force?: boolean
+    all?: boolean
+    out?: string
+    params: {[key: string]: string}
+}
 
-require("./types")
-
-/**
- * @typedef {Object} ExecArgs
- * @property {string | Template} template
- * @property {boolean} [force]
- * @property {boolean} [all]
- * @property {string} [out]
- * @property {{[key: string]: string}} keyValueArgs
- *
- * @param {ExecArgs} args 
- */
-module.exports = function executeTemplate(args) {
+export default function executeTemplate(args: Args) {
     const {template, name} = typeof args.template === "string"  ? loadTemplate(args.template): {template: args.template, name: "Inline Template"}
     validateTemplate(template, name)
-    processTemplate(template, args.keyValuePairs, {force: args.force, all: args.all, out: args.out})
+    processTemplate(template, args.params, {force: args.force, all: args.all, out: args.out})
         .then(() => 
             process.exit(0))
         .catch((err) => 
@@ -28,11 +24,8 @@ module.exports = function executeTemplate(args) {
 
 /**
  * Load the template that starts with name {templateName} is unambigious
- * 
- * @param {string} templateName 
- * @returns {{template: Template, name: string}}
  */
-function loadTemplate(templateName) {
+function loadTemplate(templateName: string): {template: Template, name?: string} {
     const allFiles = _getFiles(configDir)
     const files = allFiles.filter(file =>  file.startsWith(templateName))
 
@@ -47,7 +40,7 @@ function loadTemplate(templateName) {
             n = n.slice(0, -1)
         }
         if(meant.size)
-            console.error(`'${templateName}' did not match any template. Did you meant ${[...meant]} ?`)
+            console.error(`'${templateName}' did not match any template. Did you meant ${[...(<any>meant)].join("\n")} ?`)
         else
             console.error(`'${templateName}' did not match any template.`)
         process.exit(1)
@@ -75,11 +68,8 @@ function loadTemplate(templateName) {
 
 /**
  * Return name of all files in {dir} or its subdirs
- * 
- * @param {string} rootdir 
- * @returns {string[]}
  */
-function _getFiles(dir, parent = "") {
+function _getFiles(dir: string, parent = ""): string[] {
     const results = []
     for(let file of fs.readdirSync(dir)) {
         if(fs.statSync(path.resolve(dir, file)).isDirectory()) {
@@ -95,11 +85,8 @@ function _getFiles(dir, parent = "") {
 
 /**
  * Validate a template an exit is template is not ok
- * 
- * @param {Template} template 
- * @param {string} templateName
  */
-function validateTemplate(template, templateName) {
+function validateTemplate(template: Template, templateName: string) {
     if(!!template.args && !(template.args instanceof Array)) {
         console.error(`Malformed template ${templateName}: property 'args' should be an array, found ${template.args}`)
         process.exit(1)
@@ -157,12 +144,16 @@ function validateTemplate(template, templateName) {
  * @param {{force?: boolean, all?: boolean, out?: string}} options
  * @returns {Promise}
  */
-function processTemplate(template, keyValueArgs, options) {
+function processTemplate(
+    template: Template,
+    keyValueArgs: object,
+    options: {force?: boolean, all?: boolean, out?: string}): Promise<any> {
+    
     const cwd = process.cwd()
     
     const argsWithDefaultValues = (template.args || [])
         .filter(a => a.hasOwnProperty("default"))
-        .reduce((acc, arg) => (acc[arg.name] = arg.default, acc), {})
+        .reduce((acc: any, arg) => (acc[arg.name] = arg.default, acc), {})
     const argsAlreadyGiven = {
         ...argsWithDefaultValues,
         ...keyValueArgs
@@ -181,26 +172,31 @@ function processTemplate(template, keyValueArgs, options) {
             ...answers
         }
         for(let file of template.files(args)) {
+            if(!file.name) continue
+
             const filePath = path.resolve(options.out || cwd, file.name)
-            if(fs.existsSync(filePath) && !options.force) {
+            const exists = fs.existsSync(filePath)
+            if(exists && !options.force) {
                 console.error(`Could not overwrite file ${file.name}`)
                 process.exit(1)
             }
             _mkdirp(path.dirname(filePath))
 
-            const content = processContent(file.content, {trim: file.trim, indent: file.indent})
+            const content = processContent(file.content, {trim: true /*file.trim*/, indent: true /*file.indent*/})
             fs.writeFileSync(filePath, content)
-            console.info(`Created ${filePath}`)
+            if(exists) {
+                console.info(`Overwrite ${filePath}`)
+            } else {
+                console.info(`Created ${filePath}`)
+            }
         }
     })
 }
 
 /**
  * Create a directory and all of its non-existing parent directories
- * 
- * @param {string} s 
  */
-function _mkdirp(s) {
+function _mkdirp(s: string): void {
     if (!fs.existsSync(path.dirname(s))) _mkdirp(path.dirname(s))
     if (!fs.existsSync(s)) fs.mkdirSync(s)
 }
@@ -209,12 +205,8 @@ function _mkdirp(s) {
  * Process a template's file contet
  * - trim content
  * - normalize indentation
- * 
- * @param {string} content 
- * @param {{trim?: boolean, indent?: boolean}} options
- * @returns {string}
  */
-function processContent(content, options) {
+function processContent(content: string, options: {trim?: boolean, indent?: boolean}): string {
     const { trim, indent } = options
 
     if(!(typeof trim === "boolean" && trim === false)) {
