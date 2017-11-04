@@ -166,7 +166,10 @@ function processTemplate(
             default: a.default || argsAlreadyGiven[a.name]
         }))
     
-    return inquirer.prompt(argsToAskFor).then(answers => {
+    return (argsToAskFor.length
+            ? inquirer.prompt(argsToAskFor)
+            : Promise.resolve([])
+    ).then(answers => {
         const args = {
             ...argsAlreadyGiven,
             ...answers
@@ -182,7 +185,7 @@ function processTemplate(
             }
             _mkdirp(path.dirname(filePath))
 
-            const content = processContent(file.content, {trim: true /*file.trim*/, indent: true /*file.indent*/})
+            const content = processContent(file.content, {trim: file.trim, indent: file.indent})
             fs.writeFileSync(filePath, content)
             if(exists) {
                 console.info(`Overwrite ${filePath}`)

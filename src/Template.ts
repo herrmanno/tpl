@@ -9,5 +9,7 @@ export default interface Template {
     files(args: { [key: string]: string }): {
         name: string
         content: string
+        trim?: boolean
+        indent?: boolean
     }[]
 }

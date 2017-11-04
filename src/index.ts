@@ -1,5 +1,6 @@
 import * as yargs from "yargs"
 import initTemplate from "./init"
+import createTemplate from "./create"
 import execTemplate from "./exec"
 import {configDir}from "./config"
 import "./string+cases"
@@ -26,6 +27,9 @@ export default function main() {
         .boolean("init")
         .describe("init", "create an initial template file")
 
+        .boolean("create")
+        .describe("init", "create a template from existing files")
+
         .demandOption([])
         .help("h")
         .alias("h", "help")
@@ -41,6 +45,7 @@ export default function main() {
         a, all,
         o, out,
         init,
+        create,
         h, help,
         version,
         $0,
@@ -50,12 +55,20 @@ export default function main() {
     if(init) {
         initTemplate({force, all, params})
     }
+    else if(create) {
+        createTemplate({filePaths: values, force, params})
+    }
+    else if(help) {
+        cli.showHelp()
+        process.exit(0)
+    }
     else if(values.length === 1) {
         const template = values[0]
         execTemplate({template, force, all, out, params})
     }
     else {
         cli.showHelp()
+        process.exit(1)
     }
 
     // console.dir({
