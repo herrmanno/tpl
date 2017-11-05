@@ -13,9 +13,10 @@
             "args": [
                 // "-a",
                 // "-f",
+                // "-o /tmp",
                 // "--init",
                 // "--create",
-                "-o /tmp",
+                 "--install",
                 "license.txt"
                 // "name=AddTodo",
                 // "-foo bar"

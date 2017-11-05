@@ -1,6 +1,7 @@
 import * as yargs from "yargs"
 import initTemplate from "./init"
 import createTemplate from "./create"
+import installTemplate from "./install"
 import execTemplate from "./exec"
 import {configDir}from "./config"
 import "./string+cases"
@@ -28,11 +29,16 @@ export default function main() {
         .describe("init", "create an initial template file")
 
         .boolean("create")
-        .describe("init", "create a template from existing files")
+        .describe("create", "create a template from existing files")
+
+        .boolean("install")
+        .describe("install", "copy templates to the user's template directory")
 
         .demandOption([])
         .help("h")
         .alias("h", "help")
+
+        .locale("en")
 
         .wrap(Math.min(yargs.terminalWidth(), 120))
         // .epilog("copyright 2017 Oliver Herrmann")
@@ -46,17 +52,28 @@ export default function main() {
         o, out,
         init,
         create,
+        install,
         h, help,
         version,
         $0,
         ...params
     } = args
+
+
+    return console.dir({
+        f, a, o, init,
+        params,
+        values
+    })
     
     if(init) {
         initTemplate({force, all, params})
     }
     else if(create) {
         createTemplate({filePaths: values, force, params})
+    }
+    else if(install) {
+        installTemplate({filePaths: values, force})
     }
     else if(help) {
         cli.showHelp()
@@ -70,10 +87,4 @@ export default function main() {
         cli.showHelp()
         process.exit(1)
     }
-
-    // console.dir({
-    //     f, a, o, init,
-    //     params,
-    //     values
-    // })
 }

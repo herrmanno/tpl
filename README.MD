@@ -1,4 +1,4 @@
-# tpl
+# <img height="200" src="assets/logo.svg"/>
 
 ## install
 
@@ -7,16 +7,20 @@
 ## usage
 
 ```shell
-  Usage: index [options] <template> [key-value-pairs...]
-
+  Usage: tpl [options] <template> [params...]
 
   Options:
+    -f, --force  Force overwrite if one of the generated files already exists                              [boolean]
+    -a, --all    Prompt for all arguments                                                                  [boolean]
+    -o, --out    Directory to write files to                                                                [string]
+    --init       create an initial template file                                                           [boolean]
+    --create     create a template from existing files                                                     [boolean]
+    --install    copy templates to the user's template directory                                           [boolean]
+    --version    Show version number                                                                       [boolean]
+    -h, --help   Show help                                                                                 [boolean]
 
-    -V, --version    output the version number
-    -f, --force      overwrite existing files
-    -a, --all        ask for all arguments
-    -o, --out <dir>  out dir
-    -h, --help       output usage information
+  Examples:
+    tpl mytemplate --foo FOO --bar 123 --baz  Generates files from 'mytemplate' with arguments foo, bar and baz
 ```
 
 
@@ -126,3 +130,32 @@ Wether to normalize indentation of the file's content.
 If you are using Template-Strings for your content it's likely to have empty strange indentation in front of some lines.
 If set, tpl will cut unnecessary indentation from theese lines.
 If not specified, tpl will normalize indentation by default.
+
+
+## Create templates and distribute them
+
+tpl is meant to be used with your favourite snippets. But if you took your time to create and improve your templates it would be nice to share them with other users.
+
+This can be easily achieved by wrapping your template in a node package and [publish it to npm](https://docs.npmjs.com/getting-started/publishing-npm-packages). To make using your template as easy as possible you can use tpl to add your template to the users tempalte directory when he or she installs your package. You can use npm's buit-in [install script](https://docs.npmjs.com/misc/scripts) therefore.
+
+
+```json
+// the package.json of your template-package
+{
+  "name": "my-custom-tpl-template",
+  "scripts": {
+    "install": "tpl --install ./my-template.js"
+  },
+}
+```
+
+The --install flag instructs tpl to copy the following templates to the users template dir.
+
+
+## Contributing
+
+Every form of contribution is welcome. Please try to roughly match the existing coding style.
+
+## License
+
+tpl is licensed under ISC. Feel free to use it in your private or commercial project.

@@ -21,7 +21,8 @@
     "@types/inquirer": "0.0.35",
     "@types/node": "^8.0.47",
     "@types/xdg-basedir": "^2.0.0",
-    "@types/yargs": "^8.0.2"
+    "@types/yargs": "^8.0.2",
+    "webshot": "^0.18.0"
   },
   "dependencies": {
     "commander": "^2.11.0",
