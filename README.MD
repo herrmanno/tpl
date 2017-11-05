@@ -2,6 +2,9 @@
 
 ## install
 
+tpl is built with node, so you need to have [node installed](https://nodejs.org/en/download/) on your system.
+
+To Install run 
 `npm i -g tpl-cmd`
 
 ## usage
@@ -46,7 +49,7 @@ Create a new template from existing files.
 `tpl --create myfirstfile.txt mysecondfile.txt`
 
 
-## Create a meta-template
+### Create a meta-template
 
 You can create templates that will call other template at runime. An example would look like this:
 
