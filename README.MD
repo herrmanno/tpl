@@ -1,4 +1,4 @@
-# <img height="200" src="assets/logo.svg"/>
+# <img height="200" src="assets/logo.png"/>
 
 ## install
 
