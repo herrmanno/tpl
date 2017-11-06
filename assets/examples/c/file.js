@@ -7,9 +7,7 @@ module.exports = {
     files: ({name}) => [
         {
             name: `${name}.c`,
-            content: `
-            
-            `
+            content: ``
         },
         {
             name: `${name}.h`,

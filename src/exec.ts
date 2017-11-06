@@ -10,13 +10,19 @@ type Args = {
     force?: boolean
     all?: boolean
     out?: string
+    ignore?: boolean
     params: {[key: string]: string}
 }
 
 export default function executeTemplate(args: Args) {
+    if(args.force && args.ignore) {
+        console.error("Error: Exclusive options 'force' and 'ignore'")
+        process.exit(1)
+    }
+
     const {template, name} = typeof args.template === "string"  ? loadTemplate(args.template): {template: args.template, name: "Inline Template"}
     validateTemplate(template, name)
-    processTemplate(template, args.params, {force: args.force, all: args.all, out: args.out})
+    processTemplate(template, args.params, {force: args.force, ignore: args.ignore, all: args.all, out: args.out})
         .then(() => 
             process.exit(0))
         .catch((err) => 
@@ -127,10 +133,11 @@ function validateTemplate(template: Template, templateName: string) {
             console.error(`Malformed template ${templateName}: property 'files[].content' should be a string, found ${file.content}`)
             process.exit(1)
         }
-        if(file.content.trim().length === 0) {
-            console.error(`Malformed template ${templateName}: property 'files[].content' should not be empty`)
-            process.exit(1)
-        }
+        // TODO: is is possible not really useful, see examples/c/file
+        // if(file.content.trim().length === 0) {
+        //     console.error(`Malformed template ${templateName}: property 'files[].content' should not be empty`)
+        //     process.exit(1)
+        // }
     }
 }
 
@@ -148,7 +155,7 @@ function validateTemplate(template: Template, templateName: string) {
 function processTemplate(
     template: Template,
     keyValueArgs: object,
-    options: {force?: boolean, all?: boolean, out?: string}): Promise<any> {
+    options: {force?: boolean, ignore?: boolean, all?: boolean, out?: string}): Promise<any> {
     
     const cwd = process.cwd()
     
@@ -180,16 +187,21 @@ function processTemplate(
 
             const filePath = path.resolve(options.out || cwd, file.name)
             const exists = fs.existsSync(filePath)
-            if(exists && !options.force) {
-                console.error(`Could not overwrite file ${file.name}`)
+            if(exists && !options.force && !options.ignore) {
+                console.error(`Can not overwrite file ${file.name}`)
                 process.exit(1)
+            } else if(exists && options.ignore) {
+                console.info(`Skipping ${filePath}`)
             }
+            
             mkdirp.sync(path.dirname(filePath))
 
             const content = processContent(file.content, {trim: file.trim, indent: file.indent})
             fs.writeFileSync(filePath, content)
-            if(exists) {
-                console.info(`Overwrite ${filePath}`)
+            if(exists){
+                if(options.force) {
+                    console.info(`Overwritten ${filePath}`)
+                }
             } else {
                 console.info(`Created ${filePath}`)
             }

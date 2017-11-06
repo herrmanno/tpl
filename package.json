@@ -3,9 +3,9 @@
   "executable-name": "tpl",
   "version": "0.1.1",
   "description": "Quick and reusable template generation",
-  "main": "src/index.js",
+  "main": "index.js",
   "bin": {
-    "tpl": "src/index.js"
+    "tpl": "index.js"
   },
   "preferGlobal": true,
   "scripts": {

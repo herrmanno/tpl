@@ -7,6 +7,7 @@ import Template from "./Template"
 type Args = {
     filePaths: string[]
     force?: boolean
+    ignore?: boolean
     all?: boolean
     params: {[key: string]: string}
 }
@@ -14,6 +15,11 @@ type Args = {
 type FD = {name: string, content: string}
 
 export default function initTemplate(args: Args) {
+    if(args.filePaths.length < 1) {
+        console.error("Called --create without file arguments")
+        process.exit(1)
+    }
+
     Promise.all(readFiles(args.filePaths))
     .then(files => {
         const template = createTemplate(files)
@@ -24,7 +30,8 @@ export default function initTemplate(args: Args) {
             out,
             params: args.params,
             all: args.all,
-            force: args.force
+            force: args.force,
+            ignore: args.ignore
         })
     })
     .then(() => process.exit(0))
@@ -38,7 +45,7 @@ function readFiles(filePaths: string[]): Promise<FD>[] {
         const p = path.resolve(cwd, fp)
         fs.readFile(p, (err, data) => {
             if(err) {
-                console.error("Error while reading ${p}:", err)
+                console.error(`Error while reading ${p}:`, err)
                 reject(err)   
             } else {
                 resolve({name: fp, content: data.toString()})

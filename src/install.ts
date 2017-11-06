@@ -8,6 +8,7 @@ import Template from "./Template"
 type Args = {
     filePaths: string[]
     force?: boolean
+    ignore?: boolean
 }
 
 export default function installTemplates(args: Args) {
@@ -15,32 +16,40 @@ export default function installTemplates(args: Args) {
         .map(fp => fp.split("="))
         .map(([from, to]) => ({from, to: to || from}))
 
-    ensureNotExisting({
-        filePaths: fileMappings.map(fm => fm.to),
-        force: args.force
-    })
-    .then(() => copyFiles(fileMappings))
+    ensureNotExisting(fileMappings.map(fm => fm.to), {force: args.force, ignore: args.ignore})
+    .then(() => copyFiles(fileMappings, {force: args.force, ignore: args.ignore}))
     .then(() => process.exit(0))
     .catch(() => {
         process.exit(1)
     })
 }
 
-function ensureNotExisting(args: {filePaths: string[], force?: boolean}): Promise<any> {
+function ensureNotExisting(filePaths: string[], options: {force?: boolean, ignore?: boolean}): Promise<any> {
     return Promise.all(
-        args.filePaths.map(fp => new Promise((resolve, reject) => {
-            if(args.force)
-                resolve()
-            else
-                fs.exists(path.resolve(configDir, fp), exists => {
-                    if(exists) (console.error(`Template ${fp} already exists`), reject())
-                    else resolve()
-                })
-        }))
+        filePaths.map(fp => new Promise((resolve, reject) => {
+            fs.exists(path.resolve(configDir, fp), exists => {
+                if(exists) {
+                    if(options.force) {
+                        console.info(`Overwriting existing Template ${fp}`)
+                        resolve()
+                    } else if(options.ignore) {
+                        console.info(`Skipping existing Template ${fp}`)
+                        resolve()
+                    } else {
+                        console.error(`Template ${fp} already exists`)
+                        reject()
+                    }
+                }
+                else {
+                    console.log(`Copying template ${fp} to ${configDir}`)
+                    resolve(fp)
+                }
+            })
+        })).filter(Boolean)
     )
 }
 
-function copyFiles(fileMappings: {from: string, to: string}[]): Promise<any> {
+function copyFiles(fileMappings: {from: string, to: string}[], options: {force?: boolean, ignore?: boolean}): Promise<any> {
     const cwd = process.cwd()
     return Promise.all(
         fileMappings.map(fm => new Promise((resolve, reject) => {
@@ -53,7 +62,6 @@ function copyFiles(fileMappings: {from: string, to: string}[]): Promise<any> {
                     fs.createReadStream(fromPath)
                         .pipe(fs.createWriteStream(toPath))
                         .on("close", () => {
-                            console.log(`Copied template ${fm.from} to ${configDir}`)
                             resolve()
                         })
                         .on("error", reject)

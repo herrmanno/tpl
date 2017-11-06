@@ -30,6 +30,10 @@ export default function main() {
         .alias("o", "out")
         .describe("o", "Directory to write files to")
 
+        .boolean("i")
+        .alias("i", "ignore")
+        .describe("i", "Skip existing files")
+
         .boolean("init")
         .describe("init", "create an initial template file")
 
@@ -58,6 +62,7 @@ export default function main() {
         f, force,
         a, all,
         o, out,
+        i, ignore,
         init,
         create,
         install,
@@ -76,13 +81,13 @@ export default function main() {
     // })
     
     if(init) {
-        initTemplate({force, all, params})
+        initTemplate({force, all, params, ignore})
     }
     else if(create) {
-        createTemplate({filePaths: values, force, params})
+        createTemplate({filePaths: values, force, ignore, params})
     }
     else if(install) {
-        installTemplate({filePaths: values, force})
+        installTemplate({filePaths: values, force, ignore})
     }
     else if(list) {
         listTemplates()
@@ -93,7 +98,7 @@ export default function main() {
     }
     else if(values.length === 1) {
         const template = values[0]
-        execTemplate({template, force, all, out, params})
+        execTemplate({template, force, all, out, ignore, params})
     }
     else {
         cli.showHelp()

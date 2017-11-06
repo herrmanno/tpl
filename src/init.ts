@@ -3,6 +3,7 @@ import executeTemplate from "./exec"
 
 type Args = {
     force?: boolean
+    ignore?: boolean
     all?: boolean
     params: {[key: string]: string}
 }
