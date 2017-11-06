@@ -16,8 +16,9 @@
                 // "-o /tmp",
                 // "--init",
                 // "--create",
-                 "--install",
-                "license.txt"
+                //"--install",
+                "--list",
+                "assets/examples/license/mit.txt=examples/license/mit"
                 // "name=AddTodo",
                 // "-foo bar"
             ],

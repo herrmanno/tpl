@@ -153,7 +153,11 @@ This can be easily achieved by wrapping your template in a node package and [pub
 ```
 
 The --install flag instructs tpl to copy the following templates to the users template dir.
+You can also specify dedicated paths from and where to copy the templates.
 
+```bash
+tpl --install ./my/cool/template.js=dest/path/template.js
+```
 
 ## Contributing
 

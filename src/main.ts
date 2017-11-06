@@ -2,6 +2,7 @@ import * as yargs from "yargs"
 import initTemplate from "./init"
 import createTemplate from "./create"
 import installTemplate from "./install"
+import listTemplates from "./list"
 import execTemplate from "./exec"
 import {configDir}from "./config"
 import "./string+cases"
@@ -12,6 +13,10 @@ export default function main() {
     const cli = yargs
         .usage("Usage: $0 [options] <template> [params...]")
         .example("$0 mytemplate --foo FOO --bar 123 --baz", "Generates files from 'mytemplate' with arguments foo, bar and baz")
+        .example("$0 --init ", "Creates an initial template")
+        .example("$0 --create file_1 file_2", "Creates an initial template with the contents of file_1 to file_n")
+        .example("$0 --install file_1  src/file_2=dist/file_2", "Copies file_1 to the template dir and src/file_2 to the dist folder inside the template dir")
+        .example("$0 --list", "Lists all templates currently installed")
         
         .boolean("f")
         .alias("f", "force")
@@ -34,6 +39,9 @@ export default function main() {
         .boolean("install")
         .describe("install", "copy templates to the user's template directory")
 
+        .boolean("list")
+        .describe("list", "lists all available templates")
+
         .demandOption([])
         .help("h")
         .alias("h", "help")
@@ -53,6 +61,7 @@ export default function main() {
         init,
         create,
         install,
+        list,
         h, help,
         version,
         $0,
@@ -74,6 +83,9 @@ export default function main() {
     }
     else if(install) {
         installTemplate({filePaths: values, force})
+    }
+    else if(list) {
+        listTemplates()
     }
     else if(help) {
         cli.showHelp()
