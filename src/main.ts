@@ -60,11 +60,11 @@ export default function main() {
     } = args
 
 
-    return console.dir({
-        f, a, o, init,
-        params,
-        values
-    })
+    // console.dir({
+    //     f, a, o, init,
+    //     params,
+    //     values
+    // })
     
     if(init) {
         initTemplate({force, all, params})

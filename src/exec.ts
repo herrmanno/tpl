@@ -1,6 +1,7 @@
 import * as fs from "fs"
 import * as path from "path"
 import * as inquirer from "inquirer"
+import * as mkdirp from "mkdirp"
 import {configDir} from "./config"
 import Template from './Template'
 
@@ -183,7 +184,7 @@ function processTemplate(
                 console.error(`Could not overwrite file ${file.name}`)
                 process.exit(1)
             }
-            _mkdirp(path.dirname(filePath))
+            mkdirp.sync(path.dirname(filePath))
 
             const content = processContent(file.content, {trim: file.trim, indent: file.indent})
             fs.writeFileSync(filePath, content)
@@ -194,14 +195,6 @@ function processTemplate(
             }
         }
     })
-}
-
-/**
- * Create a directory and all of its non-existing parent directories
- */
-function _mkdirp(s: string): void {
-    if (!fs.existsSync(path.dirname(s))) _mkdirp(path.dirname(s))
-    if (!fs.existsSync(s)) fs.mkdirSync(s)
 }
 
 /**

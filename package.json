@@ -19,6 +19,7 @@
   "homepage": "https://github.com/herrmanno/tpl",
   "devDependencies": {
     "@types/inquirer": "0.0.35",
+    "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.47",
     "@types/xdg-basedir": "^2.0.0",
     "@types/yargs": "^8.0.2",
@@ -27,6 +28,7 @@
   "dependencies": {
     "commander": "^2.11.0",
     "inquirer": "^3.3.0",
+    "mkdirp": "^0.5.1",
     "xdg-basedir": "^3.0.0",
     "yargs": "^10.0.3"
   }
