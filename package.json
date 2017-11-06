@@ -8,7 +8,9 @@
     "tpl": "src/index.js"
   },
   "preferGlobal": true,
-  "scripts": {},
+  "scripts": {
+    "install": "tpl --install assets/examples/c/file.js=c/file.js assets/examples/license/mit.js=license/mit.js"
+  },
   "keywords": [
     "template",
     "tool",
@@ -18,6 +20,7 @@
   "license": "ISC",
   "homepage": "https://github.com/herrmanno/tpl",
   "devDependencies": {
+    "@types/glob": "^5.0.33",
     "@types/inquirer": "0.0.35",
     "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.47",
@@ -27,6 +30,7 @@
   },
   "dependencies": {
     "commander": "^2.11.0",
+    "glob": "^7.1.2",
     "inquirer": "^3.3.0",
     "mkdirp": "^0.5.1",
     "xdg-basedir": "^3.0.0",
